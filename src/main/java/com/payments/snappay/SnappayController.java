@@ -21,7 +21,7 @@ public class SnappayController {
 
 
     // Change to your Bucket Name
-    private final String bucketName = "myTestBucket";
+    private final String bucketName = "mytestbucket";
 
     private final S3Service s3Service;
     private final AnalyzePhotos photos;
@@ -55,13 +55,13 @@ public class SnappayController {
 
     @RequestMapping(value = "/createBucket", method = RequestMethod.POST)
     @ResponseBody
-    void createBucket(HttpServletRequest request, HttpServletResponse response) {
+    void createBucket(@RequestParam("bucketName") String bucketName) {
         s3Service.createBucket(bucketName);
     }
 
-    @RequestMapping(value = "/getimages", method = RequestMethod.GET)
+    @RequestMapping(value = "/getimages", method = RequestMethod.POST)
     @ResponseBody
-    String getImages(HttpServletRequest request, HttpServletResponse response) {
+    String getImages(@RequestParam("bucketName") String bucketName) {
         return s3Service.ListAllObjects(bucketName);
     }
 
@@ -94,12 +94,12 @@ public class SnappayController {
     // Upload a video to analyze.
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
     @ResponseBody
-    public ModelAndView singleFileUpload(@RequestParam("file") MultipartFile file) {
+    public ModelAndView singleFileUpload(@RequestBody UploadFileRequest uploadFileRequest) {
         try {
             // Put the file into the bucket.
-            byte[] bytes = file.getBytes();
-            String name = file.getOriginalFilename();
-            s3Service.putObject(bytes, bucketName, name);
+            byte[] bytes = uploadFileRequest.getFile().getBytes();
+            String name = uploadFileRequest.getFile().getOriginalFilename();
+            s3Service.putObject(bytes, uploadFileRequest.getBucketName(), name);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -108,15 +108,15 @@ public class SnappayController {
     }
 
     // This controller method downloads the given image from the Amazon S3 bucket.
-    @RequestMapping(value = "/downloadphoto", method = RequestMethod.GET)
-    void buildDynamicReportDownload(HttpServletRequest request, HttpServletResponse response) {
+    @RequestMapping(value = "/downloadphoto", method = RequestMethod.POST)
+    void buildDynamicReportDownload(HttpServletResponse response, @RequestBody UploadFileRequest uploadFileRequest) {
         try {
-            String photoKey = request.getParameter("photoKey");
+            String photoKey = uploadFileRequest.getKey();
             byte[] photoBytes = s3Service.getObjectBytes(bucketName, photoKey);
             InputStream is = new ByteArrayInputStream(photoBytes);
 
             // Define the required information here.
-            response.setContentType("image/png");
+             response.setContentType("image/png");
             response.setHeader("Content-disposition", "attachment; filename=" + photoKey);
             org.apache.commons.io.IOUtils.copy(is, response.getOutputStream());
             response.flushBuffer();

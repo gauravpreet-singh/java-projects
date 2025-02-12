@@ -4,6 +4,7 @@ package com.payments.snappay;
 // SPDX-License-Identifier: Apache-2.0
 
 import software.amazon.awssdk.auth.credentials.EnvironmentVariableCredentialsProvider;
+import software.amazon.awssdk.auth.credentials.InstanceProfileCredentialsProvider;
 import software.amazon.awssdk.core.SdkBytes;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.rekognition.RekognitionClient;
@@ -21,8 +22,8 @@ public class AnalyzePhotos {
     public ArrayList<WorkItem> DetectLabels(byte[] bytes, String key) {
         try {
             RekognitionClient rekClient = RekognitionClient.builder()
-                    .credentialsProvider(EnvironmentVariableCredentialsProvider.create())
-                    .region(Region.US_EAST_2)
+                    .credentialsProvider(InstanceProfileCredentialsProvider.create())
+                    .region(Region.AP_SOUTH_1)
                     .build();
 
             SdkBytes sourceBytes = SdkBytes.fromByteArray(bytes);
