@@ -62,17 +62,29 @@ public class SnappayController {
 
     @RequestMapping(value = "/createMyCollection", method = RequestMethod.POST)
     @ResponseBody
-    public void createMyCollection(@RequestParam("collectionId") String collectionId){
+    public void createMyCollection(@RequestParam("collectionId") String collectionId) {
         photos.createMyCollection(collectionId);
+    }
+
+    @RequestMapping(value = "/listAllCollections", method = RequestMethod.GET)
+    @ResponseBody
+    public void listAllCollections() {
+        photos.listAllCollections();
+    }
+
+    @RequestMapping(value = "/addToCollection", method = RequestMethod.POST)
+    @ResponseBody
+    public void addToCollection(@RequestParam("collectionId")String collectionId, @RequestParam("sourceImage") String sourceImage) {
+        photos.addToCollection(collectionId, sourceImage);
     }
 
     @RequestMapping(value = "/searchFace", method = RequestMethod.POST)
     @ResponseBody
-    public void searchFace(@RequestParam("collectionId") String collectionId, @RequestParam("sourceId") String sourceId){
-        photos.searchFaceInCollection(collectionId,sourceId);
+    public void searchFace(@RequestParam("collectionId") String collectionId, @RequestParam("sourceImage") String sourceImage) {
+        photos.searchFaceInCollection(collectionId, sourceImage);
     }
 
-    @RequestMapping(value = "/getimages", method = RequestMethod.POST)
+    @RequestMapping(value = "/getimages", method = RequestMethod.GET)
     @ResponseBody
     String getImages(@RequestParam("bucketName") String bucketName) {
         return s3Service.ListAllObjects(bucketName);
@@ -107,7 +119,7 @@ public class SnappayController {
     // Upload a video to analyze.
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
     @ResponseBody
-    public ModelAndView singleFileUpload(@RequestParam("file") MultipartFile file,@RequestParam("bucketName") String bucketName) {
+    public ModelAndView singleFileUpload(@RequestParam("file") MultipartFile file, @RequestParam("bucketName") String bucketName) {
         try {
             // Put the file into the bucket.
             byte[] bytes = file.getBytes();
@@ -129,7 +141,7 @@ public class SnappayController {
             InputStream is = new ByteArrayInputStream(photoBytes);
 
             // Define the required information here.
-             response.setContentType("image/png");
+            response.setContentType("image/png");
             response.setHeader("Content-disposition", "attachment; filename=" + photoKey);
             org.apache.commons.io.IOUtils.copy(is, response.getOutputStream());
             response.flushBuffer();

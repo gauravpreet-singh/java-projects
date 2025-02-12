@@ -106,4 +106,61 @@ public class AnalyzePhotos {
             System.exit(1);
         }
     }
+    public void listAllCollections() {
+        try (RekognitionClient rekClient = getClient()){
+            ListCollectionsRequest listCollectionsRequest = ListCollectionsRequest.builder()
+                    .maxResults(10)
+                    .build();
+
+            ListCollectionsResponse response = rekClient.listCollections(listCollectionsRequest);
+            List<String> collectionIds = response.collectionIds();
+            for (String resultId : collectionIds) {
+                System.out.println(resultId);
+            }
+
+        } catch (RekognitionException e) {
+            System.out.println(e.getMessage());
+            System.exit(1);
+        }
+    }
+    public void addToCollection(String collectionId, String sourceImage) {
+        try (RekognitionClient rekClient = getClient()){
+            InputStream sourceStream = new FileInputStream(sourceImage);
+            SdkBytes sourceBytes = SdkBytes.fromInputStream(sourceStream);
+            Image souImage = Image.builder()
+                    .bytes(sourceBytes)
+                    .build();
+
+            IndexFacesRequest facesRequest = IndexFacesRequest.builder()
+                    .collectionId(collectionId)
+                    .image(souImage)
+                    .maxFaces(1)
+                    .qualityFilter(QualityFilter.AUTO)
+                    .detectionAttributes(Attribute.DEFAULT)
+                    .build();
+
+            IndexFacesResponse facesResponse = rekClient.indexFaces(facesRequest);
+            System.out.println("Results for the image");
+            System.out.println("\n Faces indexed:");
+            List<FaceRecord> faceRecords = facesResponse.faceRecords();
+            for (FaceRecord faceRecord : faceRecords) {
+                System.out.println("  Face ID: " + faceRecord.face().faceId());
+                System.out.println("  Location:" + faceRecord.faceDetail().boundingBox().toString());
+            }
+
+            List<UnindexedFace> unindexedFaces = facesResponse.unindexedFaces();
+            System.out.println("Faces not indexed:");
+            for (UnindexedFace unindexedFace : unindexedFaces) {
+                System.out.println("  Location:" + unindexedFace.faceDetail().boundingBox().toString());
+                System.out.println("  Reasons:");
+                for (Reason reason : unindexedFace.reasons()) {
+                    System.out.println("Reason:  " + reason);
+                }
+            }
+
+        } catch (RekognitionException | FileNotFoundException e) {
+            System.out.println(e.getMessage());
+            System.exit(1);
+        }
+    }
 }
