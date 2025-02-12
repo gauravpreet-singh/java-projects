@@ -95,7 +95,7 @@ public class SnappayController {
     // Upload a video to analyze.
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
     @ResponseBody
-    public ModelAndView singleFileUpload(@RequestParam MultipartFile file) {
+    public ModelAndView singleFileUpload(@RequestParam("file") MultipartFile file) {
         try {
             // Put the file into the bucket.
             byte[] bytes = file.getBytes();
