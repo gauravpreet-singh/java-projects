@@ -2,12 +2,14 @@ package com.payments.snappay;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -110,7 +112,7 @@ public class SnappayController {
             // Put the file into the bucket.
             byte[] bytes = file.getBytes();
             String name = file.getOriginalFilename();
-            s3Service.putObject(bytes, bucketName, "Sample.jpg");
+            s3Service.putObject(bytes, bucketName, name);
 
         } catch (IOException e) {
             e.printStackTrace();
