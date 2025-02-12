@@ -93,7 +93,7 @@ public class SnappayController {
 //        }
 
     // Upload a video to analyze.
-    @RequestMapping(value = "/upload", method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @RequestMapping(value = "/upload", method = RequestMethod.POST)
     @ResponseBody
     public ModelAndView singleFileUpload(@RequestParam MultipartFile file, @RequestParam String bucketName) {
         try {
