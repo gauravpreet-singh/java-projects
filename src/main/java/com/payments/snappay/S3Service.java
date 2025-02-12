@@ -27,6 +27,8 @@ import java.io.StringWriter;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @Component
 public class S3Service {
@@ -149,12 +151,13 @@ public class S3Service {
     public void putObject(byte[] data, String bucketName, String objectKey) {
         s3 = getClient();
         try {
+            Logger.getAnonymousLogger().log(Level.WARNING,"Adding Image");
             s3.putObject(PutObjectRequest.builder()
                             .bucket(bucketName)
                             .key(objectKey)
                             .build(),
                     RequestBody.fromBytes(data));
-
+            Logger.getAnonymousLogger().log(Level.WARNING,"Added Image");
         } catch (S3Exception e) {
             System.err.println(e.getMessage());
             System.exit(1);

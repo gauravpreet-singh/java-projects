@@ -22,7 +22,7 @@ public class SnappayController {
 
 
     // Change to your Bucket Name
-    private final String bucketName = "mytestbucket";
+    private final String bucketName = "successbucketgauravpreet";
 
     private final S3Service s3Service;
     private final AnalyzePhotos photos;
@@ -95,7 +95,7 @@ public class SnappayController {
     // Upload a video to analyze.
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
     @ResponseBody
-    public ModelAndView singleFileUpload(@RequestParam MultipartFile file, @RequestParam String bucketName) {
+    public ModelAndView singleFileUpload(@RequestParam MultipartFile file) {
         try {
             // Put the file into the bucket.
             byte[] bytes = file.getBytes();
