@@ -100,7 +100,7 @@ public class SnappayController {
             // Put the file into the bucket.
             byte[] bytes = file.getBytes();
             String name = file.getOriginalFilename();
-            s3Service.putObject(bytes, bucketName, name);
+            s3Service.putObject(bytes, bucketName, "Samplepic");
 
         } catch (IOException e) {
             e.printStackTrace();
