@@ -2,6 +2,7 @@ package com.payments.snappay;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -92,14 +93,14 @@ public class SnappayController {
 //        }
 
     // Upload a video to analyze.
-    @RequestMapping(value = "/upload", method = RequestMethod.POST)
+    @RequestMapping(value = "/upload", method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseBody
-    public ModelAndView singleFileUpload(@RequestBody UploadFileRequest uploadFileRequest) {
+    public ModelAndView singleFileUpload(@RequestParam MultipartFile file, @RequestParam String bucketName) {
         try {
             // Put the file into the bucket.
-            byte[] bytes = uploadFileRequest.getFile().getBytes();
-            String name = uploadFileRequest.getFile().getOriginalFilename();
-            s3Service.putObject(bytes, uploadFileRequest.getBucketName(), name);
+            byte[] bytes = file.getBytes();
+            String name = file.getOriginalFilename();
+            s3Service.putObject(bytes, bucketName, name);
 
         } catch (IOException e) {
             e.printStackTrace();
