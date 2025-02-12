@@ -2,18 +2,17 @@ package com.payments.snappay;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Properties;
 
 @Controller
 public class SnappayController {
@@ -56,8 +55,20 @@ public class SnappayController {
 
     @RequestMapping(value = "/createBucket", method = RequestMethod.POST)
     @ResponseBody
-    void createBucket(@RequestParam("bucketName") String bucketName) {
+    public void createBucket(@RequestParam("bucketName") String bucketName) {
         s3Service.createBucket(bucketName);
+    }
+
+    @RequestMapping(value = "/createMyCollection", method = RequestMethod.POST)
+    @ResponseBody
+    public void createMyCollection(@RequestParam("collectionId") String collectionId){
+        photos.createMyCollection(collectionId);
+    }
+
+    @RequestMapping(value = "/searchFace", method = RequestMethod.POST)
+    @ResponseBody
+    public void searchFace(@RequestParam("collectionId") String collectionId, @RequestParam("sourceId") String sourceId){
+        photos.searchFaceInCollection(collectionId,sourceId);
     }
 
     @RequestMapping(value = "/getimages", method = RequestMethod.POST)
@@ -95,12 +106,12 @@ public class SnappayController {
     // Upload a video to analyze.
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
     @ResponseBody
-    public ModelAndView singleFileUpload(@RequestParam MultipartFile file) {
+    public ModelAndView singleFileUpload(@RequestParam("file") MultipartFile file,@RequestParam("bucketName") String bucketName) {
         try {
             // Put the file into the bucket.
             byte[] bytes = file.getBytes();
             String name = file.getOriginalFilename();
-            s3Service.putObject(bytes, bucketName, "Samplepic");
+            s3Service.putObject(bytes, bucketName, "Sample.jpg");
 
         } catch (IOException e) {
             e.printStackTrace();
