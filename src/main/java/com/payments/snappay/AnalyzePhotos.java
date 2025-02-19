@@ -78,7 +78,7 @@ public class AnalyzePhotos {
         }
     }
 
-    public void searchFaceInCollection(String collectionId, String sourceImage) {
+    public List<FaceMatch> searchFaceInCollection(String collectionId, String sourceImage) {
         try(RekognitionClient rekClient = getClient()){
             InputStream sourceStream = new FileInputStream(new File(sourceImage));
             SdkBytes sourceBytes = SdkBytes.fromInputStream(sourceStream);
@@ -100,11 +100,13 @@ public class AnalyzePhotos {
                 System.out.println("The similarity level is  " + face.similarity());
                 System.out.println();
             }
+            return faceImageMatches;
 
         } catch (RekognitionException | FileNotFoundException e) {
             System.out.println(e.getMessage());
             System.exit(1);
         }
+        return null;
     }
     public List<String> listAllCollections() {
         try (RekognitionClient rekClient = getClient()){

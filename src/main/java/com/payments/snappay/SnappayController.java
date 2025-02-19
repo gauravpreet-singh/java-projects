@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
+import software.amazon.awssdk.services.rekognition.model.FaceMatch;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayInputStream;
@@ -14,7 +15,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
-@Controller
+@RestController
 public class SnappayController {
     // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
@@ -54,37 +55,31 @@ public class SnappayController {
     }
 
     @RequestMapping(value = "/createBucket", method = RequestMethod.POST)
-    @ResponseBody
     public void createBucket(@RequestParam("bucketName") String bucketName) {
         s3Service.createBucket(bucketName);
     }
 
     @RequestMapping(value = "/createMyCollection", method = RequestMethod.POST)
-    @ResponseBody
     public void createMyCollection(@RequestParam("collectionId") String collectionId) {
         photos.createMyCollection(collectionId);
     }
 
     @RequestMapping(value = "/listAllCollections", method = RequestMethod.GET)
-    @ResponseBody
     public List<String> listAllCollections() {
         return photos.listAllCollections();
     }
 
     @RequestMapping(value = "/addToCollection", method = RequestMethod.POST)
-    @ResponseBody
     public void addToCollection(@RequestParam("collectionId")String collectionId, @RequestParam("sourceImage") String sourceImage) {
         photos.addToCollection(collectionId, sourceImage);
     }
 
     @RequestMapping(value = "/searchFace", method = RequestMethod.POST)
-    @ResponseBody
-    public void searchFace(@RequestParam("collectionId") String collectionId, @RequestParam("sourceImage") String sourceImage) {
-        photos.searchFaceInCollection(collectionId, sourceImage);
+    public List<FaceMatch> searchFace(@RequestParam("collectionId") String collectionId, @RequestParam("sourceImage") String sourceImage) {
+        return photos.searchFaceInCollection(collectionId, sourceImage);
     }
 
     @RequestMapping(value = "/getimages", method = RequestMethod.GET)
-    @ResponseBody
     String getImages(@RequestParam("bucketName") String bucketName) {
         return s3Service.ListAllObjects(bucketName);
     }
