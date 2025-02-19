@@ -75,7 +75,7 @@ public class SnappayController {
     }
 
     @RequestMapping(value = "/searchFace", method = RequestMethod.POST)
-    public List<FaceMatch> searchFace(@RequestParam("collectionId") String collectionId, @RequestParam("sourceImage") MultipartFile sourceImage) {
+    public float searchFace(@RequestParam("collectionId") String collectionId, @RequestParam("sourceImage") MultipartFile sourceImage) {
         return photos.searchFaceInCollection(collectionId, sourceImage);
     }
 
