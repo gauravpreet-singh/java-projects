@@ -7,6 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 import software.amazon.awssdk.services.rekognition.model.FaceMatch;
+import software.amazon.awssdk.services.rekognition.model.IndexFacesResponse;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayInputStream;
@@ -69,8 +70,8 @@ public class SnappayController {
     }
 
     @RequestMapping(value = "/addToCollection", method = RequestMethod.POST)
-    public void addToCollection(@RequestParam("collectionId")String collectionId, @RequestParam("sourceImage") MultipartFile sourceImage) {
-        photos.addToCollection(collectionId, sourceImage);
+    public IndexFacesResponse addToCollection(@RequestParam("collectionId")String collectionId, @RequestParam("sourceImage") MultipartFile sourceImage) {
+        return photos.addToCollection(collectionId, sourceImage);
     }
 
     @RequestMapping(value = "/searchFace", method = RequestMethod.POST)

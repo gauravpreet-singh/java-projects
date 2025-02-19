@@ -18,11 +18,12 @@ import java.util.List;
 @Component
 public class AnalyzePhotos {
     private RekognitionClient getClient() {
-        return  RekognitionClient.builder()
+        return RekognitionClient.builder()
                 .credentialsProvider(InstanceProfileCredentialsProvider.create())
                 .region(Region.AP_SOUTH_1)
                 .build();
     }
+
     public ArrayList<WorkItem> DetectLabels(byte[] bytes, String key) {
         try {
             RekognitionClient rekClient = RekognitionClient.builder()
@@ -60,8 +61,9 @@ public class AnalyzePhotos {
         }
         return null;
     }
+
     public void createMyCollection(String collectionId) {
-        try(RekognitionClient rekClient = getClient()) {
+        try (RekognitionClient rekClient = getClient()) {
 
             CreateCollectionRequest collectionRequest = CreateCollectionRequest.builder()
                     .collectionId(collectionId)
@@ -77,7 +79,7 @@ public class AnalyzePhotos {
     }
 
     public List<FaceMatch> searchFaceInCollection(String collectionId, String sourceImage) {
-        try(RekognitionClient rekClient = getClient()){
+        try (RekognitionClient rekClient = getClient()) {
             InputStream sourceStream = new FileInputStream(new File(sourceImage));
             SdkBytes sourceBytes = SdkBytes.fromInputStream(sourceStream);
             Image souImage = Image.builder()
@@ -106,8 +108,9 @@ public class AnalyzePhotos {
         }
         return null;
     }
+
     public List<String> listAllCollections() {
-        try (RekognitionClient rekClient = getClient()){
+        try (RekognitionClient rekClient = getClient()) {
             ListCollectionsRequest listCollectionsRequest = ListCollectionsRequest.builder()
                     .maxResults(10)
                     .build();
@@ -124,8 +127,9 @@ public class AnalyzePhotos {
         }
         return null;
     }
-    public void addToCollection(String collectionId, MultipartFile sourceImage) {
-        try (RekognitionClient rekClient = getClient()){
+
+    public IndexFacesResponse addToCollection(String collectionId, MultipartFile sourceImage) {
+        try (RekognitionClient rekClient = getClient()) {
             InputStream sourceStream = new BufferedInputStream(sourceImage.getInputStream());
             SdkBytes sourceBytes = SdkBytes.fromInputStream(sourceStream);
             Image souImage = Image.builder()
@@ -158,12 +162,13 @@ public class AnalyzePhotos {
                     System.out.println("Reason:  " + reason);
                 }
             }
-
+            return facesResponse;
         } catch (RekognitionException | FileNotFoundException e) {
             System.out.println(e.getMessage());
             System.exit(1);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        return null;
     }
 }
