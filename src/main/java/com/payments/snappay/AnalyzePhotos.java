@@ -4,16 +4,14 @@ package com.payments.snappay;
 // SPDX-License-Identifier: Apache-2.0
 
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.auth.credentials.InstanceProfileCredentialsProvider;
 import software.amazon.awssdk.core.SdkBytes;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.rekognition.RekognitionClient;
 import software.amazon.awssdk.services.rekognition.model.*;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -126,9 +124,9 @@ public class AnalyzePhotos {
         }
         return null;
     }
-    public void addToCollection(String collectionId, String sourceImage) {
+    public void addToCollection(String collectionId, MultipartFile sourceImage) {
         try (RekognitionClient rekClient = getClient()){
-            InputStream sourceStream = new FileInputStream(sourceImage);
+            InputStream sourceStream = new BufferedInputStream(sourceImage.getInputStream());
             SdkBytes sourceBytes = SdkBytes.fromInputStream(sourceStream);
             Image souImage = Image.builder()
                     .bytes(sourceBytes)
@@ -164,6 +162,8 @@ public class AnalyzePhotos {
         } catch (RekognitionException | FileNotFoundException e) {
             System.out.println(e.getMessage());
             System.exit(1);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 }
