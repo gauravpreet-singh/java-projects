@@ -97,16 +97,15 @@ public class AnalyzePhotos {
             for (FaceMatch face : faceImageMatches) {
                 System.out.println("The similarity level is  " + face.similarity());
                 System.out.println(face.face().faceId());
+                if(face.similarity()>95)
                 return face.similarity();
             }
-            return 0;
-
         } catch (RekognitionException | FileNotFoundException e) {
             System.out.println(e.getMessage());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        return null;
+        return 0;
     }
 
     public List<String> listAllCollections() {
