@@ -70,7 +70,7 @@ public class SnappayController {
     }
 
     @RequestMapping(value = "/addToCollection", method = RequestMethod.POST)
-    public IndexFacesResponse addToCollection(@RequestParam("collectionId")String collectionId, @RequestParam("sourceImage") MultipartFile sourceImage) {
+    public String addToCollection(@RequestParam("collectionId")String collectionId, @RequestParam("sourceImage") MultipartFile sourceImage) {
         return photos.addToCollection(collectionId, sourceImage);
     }
 

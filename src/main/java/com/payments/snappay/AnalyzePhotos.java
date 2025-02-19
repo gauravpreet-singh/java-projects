@@ -126,7 +126,7 @@ public class AnalyzePhotos {
         return null;
     }
 
-    public IndexFacesResponse addToCollection(String collectionId, MultipartFile sourceImage) {
+    public String addToCollection(String collectionId, MultipartFile sourceImage) {
         try (RekognitionClient rekClient = getClient()) {
             InputStream sourceStream = new BufferedInputStream(sourceImage.getInputStream());
             SdkBytes sourceBytes = SdkBytes.fromInputStream(sourceStream);
@@ -149,6 +149,7 @@ public class AnalyzePhotos {
             for (FaceRecord faceRecord : faceRecords) {
                 System.out.println("  Face ID: " + faceRecord.face().faceId());
                 System.out.println("  Location:" + faceRecord.faceDetail().boundingBox().toString());
+                return faceRecord.face().faceId();
             }
 
             List<UnindexedFace> unindexedFaces = facesResponse.unindexedFaces();
@@ -160,7 +161,7 @@ public class AnalyzePhotos {
                     System.out.println("Reason:  " + reason);
                 }
             }
-            return facesResponse;
+            return null;
         } catch (RekognitionException | FileNotFoundException e) {
             System.out.println(e.getMessage());
         } catch (IOException e) {
