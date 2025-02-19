@@ -7,6 +7,5 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class SnappayApplication {
     public static void main(String[] args) {
         SpringApplication.run(SnappayApplication.class, args);
-
     }
 }

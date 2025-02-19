@@ -57,7 +57,6 @@ public class AnalyzePhotos {
 
         } catch (RekognitionException e) {
             System.out.println(e.getMessage());
-            System.exit(1);
         }
         return null;
     }
@@ -74,7 +73,6 @@ public class AnalyzePhotos {
             System.out.println("Status code: " + collectionResponse.statusCode().toString());
         } catch (RekognitionException e) {
             System.out.println(e.getMessage());
-            System.exit(1);
         }
     }
 
@@ -104,7 +102,6 @@ public class AnalyzePhotos {
 
         } catch (RekognitionException | FileNotFoundException e) {
             System.out.println(e.getMessage());
-            System.exit(1);
         }
         return null;
     }
@@ -123,7 +120,6 @@ public class AnalyzePhotos {
             return collectionIds;
         } catch (RekognitionException e) {
             System.out.println(e.getMessage());
-            System.exit(1);
         }
         return null;
     }
@@ -165,7 +161,6 @@ public class AnalyzePhotos {
             return facesResponse;
         } catch (RekognitionException | FileNotFoundException e) {
             System.out.println(e.getMessage());
-            System.exit(1);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
