@@ -2,18 +2,17 @@ package com.payments.snappay;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 @Controller
 public class SnappayController {
@@ -68,8 +67,8 @@ public class SnappayController {
 
     @RequestMapping(value = "/listAllCollections", method = RequestMethod.GET)
     @ResponseBody
-    public void listAllCollections() {
-        photos.listAllCollections();
+    public List<String> listAllCollections() {
+        return photos.listAllCollections();
     }
 
     @RequestMapping(value = "/addToCollection", method = RequestMethod.POST)

@@ -106,7 +106,7 @@ public class AnalyzePhotos {
             System.exit(1);
         }
     }
-    public void listAllCollections() {
+    public List<String> listAllCollections() {
         try (RekognitionClient rekClient = getClient()){
             ListCollectionsRequest listCollectionsRequest = ListCollectionsRequest.builder()
                     .maxResults(10)
@@ -117,11 +117,12 @@ public class AnalyzePhotos {
             for (String resultId : collectionIds) {
                 System.out.println(resultId);
             }
-
+            return collectionIds;
         } catch (RekognitionException e) {
             System.out.println(e.getMessage());
             System.exit(1);
         }
+        return null;
     }
     public void addToCollection(String collectionId, String sourceImage) {
         try (RekognitionClient rekClient = getClient()){
