@@ -76,9 +76,9 @@ public class AnalyzePhotos {
         }
     }
 
-    public List<FaceMatch> searchFaceInCollection(String collectionId, String sourceImage) {
+    public List<FaceMatch> searchFaceInCollection(String collectionId, MultipartFile sourceImage) {
         try (RekognitionClient rekClient = getClient()) {
-            InputStream sourceStream = new FileInputStream(new File(sourceImage));
+            InputStream sourceStream = new BufferedInputStream(sourceImage.getInputStream());
             SdkBytes sourceBytes = SdkBytes.fromInputStream(sourceStream);
             Image souImage = Image.builder()
                     .bytes(sourceBytes)
@@ -102,6 +102,8 @@ public class AnalyzePhotos {
 
         } catch (RekognitionException | FileNotFoundException e) {
             System.out.println(e.getMessage());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
         return null;
     }
