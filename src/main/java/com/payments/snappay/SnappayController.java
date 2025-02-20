@@ -74,6 +74,11 @@ public class SnappayController {
         return photos.addToCollection(collectionId, sourceImage);
     }
 
+    @RequestMapping(value = "/deleteFromCollection", method = RequestMethod.POST)
+    public void deleteAllFacesFromCollection(@RequestParam("collectionId")String collectionId) {
+        photos.deleteFacesCollection(collectionId);
+    }
+
     @RequestMapping(value = "/searchFace", method = RequestMethod.POST)
     public String searchFace(@RequestParam("collectionId") String collectionId, @RequestParam("sourceImage") MultipartFile sourceImage) {
         return photos.searchFaceInCollection(collectionId, sourceImage);

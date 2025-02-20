@@ -10,6 +10,7 @@ import software.amazon.awssdk.core.SdkBytes;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.rekognition.RekognitionClient;
 import software.amazon.awssdk.services.rekognition.model.*;
+import software.amazon.awssdk.services.s3.endpoints.internal.Value;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -168,5 +169,42 @@ public class AnalyzePhotos {
             throw new RuntimeException(e);
         }
         return null;
+    }
+
+    public void deleteFacesCollection(String collectionId) {
+
+        try (RekognitionClient rekClient = getClient()) {
+            DeleteFacesRequest deleteFacesRequest = DeleteFacesRequest.builder()
+                    .collectionId(collectionId)
+                    .faceIds(listFacesCollection(collectionId))
+                    .build();
+
+            rekClient.deleteFaces(deleteFacesRequest);
+            System.out.println("The faces were deleted from the collection.");
+
+        } catch (RekognitionException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public List<String> listFacesCollection(String collectionId) {
+        List<String> faceIds =  new ArrayList<String>();
+        try (RekognitionClient rekClient = getClient()) {
+            ListFacesRequest facesRequest = ListFacesRequest.builder()
+                    .collectionId(collectionId)
+                    .maxResults(10)
+                    .build();
+
+            ListFacesResponse facesResponse = rekClient.listFaces(facesRequest);
+            List<Face> faces = facesResponse.faces();
+            for (Face face : faces) {
+                System.out.println("Confidence level there is a face: " + face.confidence());
+                System.out.println("The face Id value is " + face.faceId());
+                faceIds.add(face.faceId());
+            }
+
+        } catch (RekognitionException e) {
+            System.out.println(e.getMessage());
+        }
     }
 }
