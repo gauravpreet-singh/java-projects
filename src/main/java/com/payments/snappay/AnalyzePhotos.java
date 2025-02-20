@@ -202,9 +202,9 @@ public class AnalyzePhotos {
                 System.out.println("The face Id value is " + face.faceId());
                 faceIds.add(face.faceId());
             }
-
         } catch (RekognitionException e) {
             System.out.println(e.getMessage());
         }
+        return faceIds;
     }
 }
