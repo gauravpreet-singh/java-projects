@@ -76,7 +76,7 @@ public class AnalyzePhotos {
         }
     }
 
-    public float searchFaceInCollection(String collectionId, MultipartFile sourceImage) {
+    public String searchFaceInCollection(String collectionId, MultipartFile sourceImage) {
         try (RekognitionClient rekClient = getClient()) {
             InputStream sourceStream = new BufferedInputStream(sourceImage.getInputStream());
             SdkBytes sourceBytes = SdkBytes.fromInputStream(sourceStream);
@@ -98,14 +98,14 @@ public class AnalyzePhotos {
                 System.out.println("The similarity level is  " + face.similarity());
                 System.out.println(face.face().faceId());
                 if(face.similarity()>95)
-                return face.similarity();
+                return face.face().faceId();
             }
         } catch (RekognitionException | FileNotFoundException e) {
             System.out.println(e.getMessage());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        return 0;
+        return null;
     }
 
     public List<String> listAllCollections() {
